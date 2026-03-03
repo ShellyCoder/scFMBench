@@ -110,7 +110,7 @@ python src/tasks/task2_annotation/run_task2_annotation.py \
   --seed 42
 ```
 
-# Task 4 — Drug response prediction (zero-shot cell embeddings)
+# Task 3 — Drug response prediction (zero-shot cell embeddings)
 
 This module benchmarks **binary drug response prediction** using:
 - **zero-shot cell embeddings** (precomputed, no fine-tuning of foundation models)
@@ -175,7 +175,7 @@ Each run MUST explicitly provide `--methods` and `--datasets` (or list files). N
 
 ### Example
 ```bash
-python src/tasks/task4_drug_response/run_task4_drug_response.py \
+python /run_task3_drug.py \
   --mode cv \
   --methods scGNN \
   --datasets GDSC_A,GDSC_B \
@@ -186,5 +186,124 @@ python src/tasks/task4_drug_response/run_task4_drug_response.py \
   --device cuda:0 \
   --seed 42
 ```
+
+# Task 4 — Batch integration
+
+This module evaluates **batch integration quality** using **zero-shot cell embeddings** and **scIB** metrics.
+
+## Inputs
+
+### 1) Embeddings
+Expected structure:
+
+- Baseline mode:
+<EMBEDDING_ROOT>/_outputData/_cellEmbedding.csv
+
+Embedding CSV format:
+- rows = `cell_id` (index)
+- columns = embedding dimensions
+- numeric only (no NA/Inf)
+
+### 2) Metadata (metaInfo)
+Required columns:
+- `celltype` (biological label)
+- `tech` (batch label)
+
+Expected structure:
+
+- Baseline mode:
+<METADATA_ROOT>/_metaInfo.csv
+
+**Important:** `cell_id` order must exactly match between embedding and metadata files.
+
+## Run
+
+Each run MUST explicitly provide `--methods` and `--datasets` (or list files). No defaults.
+
+### Baseline datasets
+```bash
+python run_task4_batch.py \
+  --mode baseline \
+  --methods Harmony,scGPT,scFoundation \
+  --datasets Pancreas,Lung,Immune \
+  --embedding-root ./batch_effect \
+  --metadata-root ./batch_effect/datasets \
+  --output-csv ./batch_effect/result/Task4_results.csv \
+  --n-jobs 24
+```
+
+# Task 5 — Gene function prediction
+
+This module evaluates whether **zero-shot gene embeddings** encode stable **gene semantics**.
+
+## Dataset
+- Labels: **Human Protein Atlas (HPA)** tissue-specific genes  
+- Task: **15-class** gene classification (each gene maps to exactly one tissue label)
+
+Input label file:
+- `HPA_tissue_specific_genes.pkl` (dict: tissue → list of genes)
+
+## Inputs
+### 1) Aligned gene embeddings
+- `aligned_embeddings.pkl` (dict: model_name → `pandas.DataFrame`)
+- Each DataFrame:
+  - `index`: gene symbols
+  - `values`: embedding vectors (float)
+
+### 2) One-hot baseline
+A one-hot baseline is constructed in the same gene space as a **reference model** (`--ref-onehot-model`) by creating an `N × N` identity matrix over the reference gene list.
+
+## Output
+- Long-format CSV (one row per model per fold):
+  - `Model, Fold, MacroF1, MacroAUROC, MacroAUPRC, n_genes_used, embed_dim`
+- A label table aligned to the reference gene space:
+  - `Gene, Tissue, label`
+
+## Run
+
+```bash
+python run_task5_gene_function.py \
+  --methods GeneCompass,scGPT,onehot \
+  --aligned-embeddings-pkl ./Gene_function/data/aligned_embeddings.pkl \
+  --hpa-tissue-genes-pkl ./Gene_function/data/HPA_tissue_specific_genes.pkl \
+  --ref-onehot-model GeneCompass \
+  --output-csv ./Gene_function/result/GeneFunction_5_fold_results.csv \
+  --output-label-csv ./Gene_function/data/tissue_specific_label.csv \
+  --device cuda:0
+```
+
+# Task 6 — Gene regulatory network (GRN) inference
+
+This module evaluates how zero-shot gene–gene relations extracted from foundation models recover ground-truth TF–target regulations in perturbation datasets.
+
+## Overview
+For each TF perturbation dataset (e.g., `BACH2_KD`, `CDX1_OE`), we load two condition-specific gene–gene matrices:
+- `*_Case_geneEmbedding.csv`
+- `*_Control_geneEmbedding.csv`
+
+## Expected inputs
+For each method:
+{input_root}/{dataset}_Case_geneEmbedding.csv
+{input_root}/{dataset}_Control_geneEmbedding.csv
+
+For ground truth:
+{meta_info_dir}/{TF}_{MODE}_GT.csv
+
+`dataset` must follow the format `{TF}_{MODE}` (e.g., `BACH2_KD`, `CDX1_OE`).
+
+## Usage
+You must explicitly specify both `--methods` and `--datasets`.
+
+Example:
+```bash
+python run_task6_grn_inference.py \
+  --methods Cosine scGPT GeneCompass \
+  --datasets BACH2_KD CDX1_OE CDX2_OE \
+  --input-root ./GRN_infer \
+  --meta-info-dir ./GRN_infer/data/perturb_data \
+  --out-csv ./GRN_infer/result/Task6_result.csv \
+  --top-fracs 0.05
+```
+
 
 
