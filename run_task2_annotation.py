@@ -139,7 +139,6 @@ def train_model(
     scheduler = ReduceLROnPlateau(optimizer, mode="max", factor=0.5, patience=2, verbose=True)
 
     best_val_acc = -1.0
-    best_state = None
     counter = 0
 
     for epoch in range(1, num_epochs + 1):
@@ -181,7 +180,6 @@ def train_model(
 
         if val_acc > best_val_acc:
             best_val_acc = val_acc
-            best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
             counter = 0
         else:
             counter += 1
@@ -189,10 +187,6 @@ def train_model(
                 print(f"Early stopping at epoch {epoch} (no improvement for {patience} epochs)")
                 break
 
-    if best_state is None:
-        raise RuntimeError("Training failed: best_state is None.")
-    model.load_state_dict(best_state)
-    print(f"Training completed. Best Val Acc = {best_val_acc:.4f}")
     return model
 
 
