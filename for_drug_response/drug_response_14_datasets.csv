@@ -1,0 +1,15 @@
+dataset,n_cells,n_genes,n_diseases,disease_names,response_labels,n_drugs,drug_names,PubChemID,PubChemSMILES,all_has_SMILES
+GSE104987_MCF7.rds,2644,7727,1,Breast cancer,resistant;sensitive,1,KDM5-C70,90094283,CCN(CCN(C)C)C(=O)CNCC1=NC=CC(=C1)C(=O)OCC,TRUE
+GSE108397_451Lu.rds,6548,19094,1,Melanoma,resistant;sensitive,1,PLX-4720,24180719,CCCS(=O)(=O)NC1=C(C(=C(C=C1)F)C(=O)C2=CNC3=C2C=C(C=N3)Cl)F,TRUE
+GSE115251_Kelly.rds,11790,19821,1,Neuroblastoma,resistant;sensitive,1,TAE684,16038120,CC(C)S(=O)(=O)C1=CC=CC=C1NC2=NC(=NC=C2Cl)NC3=C(C=C(C=C3)N4CCC(CC4)N5CCN(CC5)C)OC,TRUE
+GSE131984-Pal_SUM159.rds,1754,16924,1,Breast cancer,resistant;sensitive,1,palbociclib,5330286,CC1=C(C(=O)N(C2=NC(=NC=C12)NC3=NC=C(C=C3)N4CCNCC4)C5CCCC5)C(=O)C,TRUE
+GSE131984_SUM159.rds,1813,16512,1,Breast cancer,resistant;sensitive,1,paclitaxel,36314,CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C,TRUE
+GSE139386_H3122.rds,6925,19051,1,Lung cancer,resistant;sensitive,1,ceritinib,57379345,CC1=CC(=C(C=C1C2CCNCC2)OC(C)C)NC3=NC=C(C(=N3)NC4=CC=CC=C4S(=O)(=O)C(C)C)Cl,TRUE
+GSE140440_DU145.rds,129,26741,1,Prostate cancer,resistant;sensitive,1,docetaxel,148124,CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)OC(C)(C)C)O)O)OC(=O)C6=CC=CC=C6)(CO4)OC(=O)C)O)C)O,TRUE
+GSE140440_PC3.rds,155,26584,1,Prostate cancer,resistant;sensitive,1,docetaxel,148124,CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)OC(C)(C)C)O)O)OC(=O)C6=CC=CC=C6)(CO4)OC(=O)C)O)C)O,TRUE
+GSE149214_PC9.rds,1062,18165,1,Lung cancer,resistant;sensitive,1,erlotinib,176870,COCCOC1=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)C#C)OCCOC,TRUE
+GSE158457_PDX.rds,25723,20112,1,Acute lymphoblastic leukemia,resistant;sensitive,1,dasatinib,3062316,CC1=C(C(=CC=C1)Cl)NC(=O)C2=CN=C(S2)NC3=CC(=NC(=N3)C)N4CCN(CC4)CCO,TRUE
+GSE163836_FCIBC02.rds,7333,18103,1,Breast cancer,resistant;sensitive,1,paclitaxel,36314,CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C,TRUE
+GSE164897-Vem_A375.rds,10967,16433,1,Melanoma,resistant;sensitive,1,vemurafenib,42611257,CCCS(=O)(=O)NC1=C(C(=C(C=C1)F)C(=O)C2=CNC3=C2C=C(C=N3)C4=CC=C(C=C4)Cl)F,TRUE
+GSE168668_LNCaP.rds,10502,19480,1,Prostate cancer,resistant;sensitive,1,enzalutamide,15951529,CC1(C(=O)N(C(=S)N1C2=CC(=C(C=C2)C(=O)NC)F)C3=CC(=C(C=C3)C#N)C(F)(F)F)C,TRUE
+GSE186960_Panc1.rds,6136,24521,1,Pancreatic cancer,resistant;sensitive,1,gemcitabine,60750,C1=CN(C(=O)N=C1N)[C@H]2C([C@@H]([C@H](O2)CO)O)(F)F,TRUE
