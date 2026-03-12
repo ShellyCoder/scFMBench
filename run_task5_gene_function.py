@@ -169,7 +169,7 @@ def evaluate_one_model_5fold(
     batch_size_train: int = 64,
     batch_size_val: int = 128,
     lr: float = 1e-3,
-    max_epochs: int = 100,
+    max_epochs: int = 50,
     patience: int = 10,
     min_delta: float = 1e-4,
     seed: int = 42,
@@ -223,40 +223,29 @@ def evaluate_one_model_5fold(
                 optimizer.step()
                 train_losses.append(loss.item())
 
-            # validation
-            model.eval()
-            val_losses = []
-            preds_prob, preds_cls, y_true = [], [], []
+        # validation
+        model.eval()
+        val_losses = []
+        preds_prob, preds_cls, y_true = [], [], []
 
-            with torch.no_grad():
-                for bx, by in val_loader:
-                    bx, by = bx.to(device), by.to(device)
-                    logits = model(bx)
-                    prob = torch.softmax(logits, dim=1).cpu().numpy()
+        with torch.no_grad():
+            for bx, by in val_loader:
+                bx, by = bx.to(device), by.to(device)
+                logits = model(bx)
+                prob = torch.softmax(logits, dim=1).cpu().numpy()
 
-                    val_losses.append(criterion(logits, by).item())
-                    preds_prob.append(prob)
-                    preds_cls.append(prob.argmax(axis=1))
-                    y_true.append(by.cpu().numpy())
+                val_losses.append(criterion(logits, by).item())
+                preds_prob.append(prob)
+                preds_cls.append(prob.argmax(axis=1))
+                y_true.append(by.cpu().numpy())
 
-            preds_prob = np.concatenate(preds_prob)
-            preds_cls = np.concatenate(preds_cls)
-            y_true = np.concatenate(y_true)
+        preds_prob = np.concatenate(preds_prob)
+        preds_cls = np.concatenate(preds_cls)
+        y_true = np.concatenate(y_true)
 
-            train_loss = float(np.mean(train_losses)) if len(train_losses) else np.nan
-            val_loss = float(np.mean(val_losses)) if len(val_losses) else np.nan
+        macro_f1 = f1_score(y_true, preds_cls, average="macro")
+        auc_macro, aupr_macro = safe_macro_auc(y_true, preds_prob, num_classes)
 
-            macro_f1 = f1_score(y_true, preds_cls, average="macro")
-            auc_macro, aupr_macro = safe_macro_auc(y_true, preds_prob, num_classes)
-
-            print(
-                f"Epoch {epoch:03d} | TrainLoss={train_loss:.4f} | ValLoss={val_loss:.4f} | "
-                f"MacroF1={macro_f1:.4f} | AUROC={auc_macro:.4f} | AUPRC={aupr_macro:.4f}"
-            )
-
-            if not early.step(val_loss):
-                print("Early stopping triggered.")
-                break
 
         fold_results.append({
             "Model": model_name,
